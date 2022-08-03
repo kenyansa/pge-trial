@@ -4,7 +4,7 @@ module Api
             def index
                 projects = Project.all
 
-                render json: ProjectSerializer.new(projects).serialized_json
+                render json: ProjectSerializer.new(projects, options).serialized_json
             end
 
             def show
@@ -44,6 +44,10 @@ module Api
 
             def project_params
                 params.require(:project).permit(:name, :image_url)
+            end
+
+            def options
+                @options ||= { include: %i[reviews]}
             end
 
         end
