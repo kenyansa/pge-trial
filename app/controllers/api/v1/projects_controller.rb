@@ -13,6 +13,39 @@ module Api
                 render json: ProjectSerializer.new(project).serialized_json
             end
 
+            def create
+                project = Project.new(project_params)
+                if project.save
+                    render json: ProjectSerializer.new(project).serialized_json
+                else
+                    render json: { error: project.errors.messages }, status: 422
+                end
+            end
+
+            def update
+                project = Project.find_by(slug: params[:slug])
+                if project.update(project_params)
+                    render json: ProjectSerializer.new(project).serialized_json
+                else
+                    render json: { error: project.errors.messages }, status: 422
+                end
+            end
+
+            def destroy
+                project = Project.find_by(slug: params[:slug])
+                if project.destroy
+                    head :no_content
+                else
+                    render json: { error: project.errors.messages }, status: 422
+                end
+            end
+
+            private
+
+            def project_params
+                params.require(:project).permit(:name, :image_url)
+            end
+
         end
     end
 end
