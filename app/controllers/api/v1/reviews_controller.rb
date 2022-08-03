@@ -11,6 +11,15 @@ module Api
                     end
             end
 
+            def update
+                review = Review.find_by(params[:id])
+                if review.update(review_params)
+                    render json: ReviewSerializer.new(review).serialized_json
+                else
+                    render json: { error: project.errors.messages }, status: 422
+                end
+            end
+
             def destroy
                 review = Review.find(params[:id])
                 if review.destroy
